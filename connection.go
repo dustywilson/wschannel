@@ -113,6 +113,5 @@ func (cn *Connection) Kill() {
 }
 
 func (cn *Connection) Send(message interface{}) {
-	log.Printf("MESSAGE: %+v\n", message)
 	cn.C <- message
 }
