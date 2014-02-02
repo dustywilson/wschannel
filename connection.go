@@ -32,6 +32,10 @@ func (cn *Connection) loop() {
 		case <-cn.ss.sv.bulkCloser:
 			websocket.JSON.Send(cn.ws, MessageServiceRestarting)
 			return
+		case <-cn.ss.kill:
+			websocket.JSON.Send(cn.ws, MessageSessionEnded)
+			cn.Kill()
+			return
 		case <-cn.kill:
 			return
 		case <-cn.reconnected:
@@ -42,6 +46,11 @@ func (cn *Connection) loop() {
 			for {
 				select {
 				case <-cn.ss.sv.bulkCloser:
+					websocket.JSON.Send(cn.ws, MessageServiceRestarting)
+					return
+				case <-cn.ss.kill:
+					websocket.JSON.Send(cn.ws, MessageSessionEnded)
+					cn.Kill()
 					return
 				case <-cn.kill:
 					return
@@ -104,5 +113,6 @@ func (cn *Connection) Kill() {
 }
 
 func (cn *Connection) Send(message interface{}) {
+	log.Printf("MESSAGE: %+v\n", message)
 	cn.C <- message
 }

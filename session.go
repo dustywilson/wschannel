@@ -24,12 +24,6 @@ func (ss *Session) loop() {
 		select {
 		case <-ss.kill:
 			ss.sv.sessionDel <- ss
-			for _, cn := range ss.connections {
-				go func(ss *Session, cn *Connection) {
-					delete(ss.connections, cn.id)
-					cn.Kill()
-				}(ss, cn)
-			}
 			return
 		case cn := <-ss.connectionAdd:
 			ss.connections[cn.id] = cn

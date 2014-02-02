@@ -31,6 +31,12 @@ var MessageServiceRestarting = stateMessage{
 	RetryDelay: time.Second * 5,
 }
 
+var MessageSessionEnded = stateMessage{
+	Disconnect: true,
+	Error:      "Session Ended",
+	RetryDelay: time.Second * -1,
+}
+
 func NewSettingMessage(setting string, value interface{}) stateMessage {
 	return stateMessage{
 		Setting: setting,
